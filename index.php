@@ -3,6 +3,7 @@ if ($_POST['form'] == "Submit") {
     $npsso        = null;
     $access_token = null;
     $grant_code   = null;
+    $friends_from = $_POST['formFrom'];
     $email        = $_POST['formEmail'];
     $password     = $_POST['formPassword'];
     $limit        = $_POST['formLimit'];
@@ -61,9 +62,9 @@ if ($_POST['form'] == "Submit") {
         getFriendsList();
     }
     function getFriendsList() {
-        global $access_token, $limit;
+        global $access_token, $limit, $friends_from;
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://us-prof.np.community.playstation.net/userProfile/v1/users/me/friends/profiles2?fields=onlineId%2CavatarUrls%2Cplus%2CtrophySummary(%40default)%2CisOfficiallyVerified%2CpersonalDetail(%40default%2CprofilePictureUrls)%2Cpresences(%40titleInfo%2ChasBroadcastData)&sort=name-onlineId&avatarSizes=m&profilePictureSizes=m&offset=0&limit=" . $limit);
+        curl_setopt($ch, CURLOPT_URL, "https://us-prof.np.community.playstation.net/userProfile/v1/users/".$friends_from."/friends/profiles2?fields=onlineId%2CavatarUrls%2Cplus%2CtrophySummary(%40default)%2CisOfficiallyVerified%2CpersonalDetail(%40default%2CprofilePictureUrls)%2Cpresences(%40titleInfo%2ChasBroadcastData)&sort=name-onlineId&avatarSizes=m&profilePictureSizes=m&offset=0&limit=" . $limit);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Authorization: Bearer ' . $access_token
         ));
@@ -101,13 +102,16 @@ if ($_POST['form'] == "Submit") {
 <h1>PSN friends list</h1>
 <form action="index.php" method="post">
     Email
-    <input type="text" name="formEmail" maxlength="50" value="<?=$email;?>">
+    <input type="text" name="formEmail" value="<?=$email;?>">
  
     Password
-    <input type="password" name="formPassword" maxlength="50" value="<?=$password;?>">
+    <input type="password" name="formPassword" value="<?=$password;?>">
 
     Limit
-    <input type="text" name="formLimit" maxlength="50" value="<?=$limit;?>">
+    <input type="text" name="formLimit" value="<?=$limit;?>">
+
+    Friends list from?
+    <input type="text" name="formFrom" value="<?=$friends_from;?>">
  
     <input type="submit" name="form" value="Submit">
 </form>
